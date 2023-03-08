@@ -1,6 +1,6 @@
 package com.rtcal.area;
 
-import com.rtcal.area.exceptions.MGDuplicateAreaID;
+import com.rtcal.area.exceptions.MGDuplicateIDException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,11 +20,11 @@ public class MGArea {
 
     private final Set<MGArea> childAreas = new HashSet<>();
 
-    public MGArea(@NotNull String name, @NotNull MGLocation loc1, @NotNull MGLocation loc2, int priority, @NotNull MGAreaManager areaManager) throws MGDuplicateAreaID {
+    public MGArea(@NotNull String name, @NotNull MGLocation loc1, @NotNull MGLocation loc2, int priority, @NotNull MGAreaManager areaManager) throws MGDuplicateIDException {
         this(name, UUID.randomUUID(), loc1, loc2, priority, areaManager);
     }
 
-    public MGArea(@NotNull String name, @NotNull UUID uuid, @NotNull MGLocation loc1, @NotNull MGLocation loc2, int priority, @NotNull MGAreaManager areaManager) throws MGDuplicateAreaID {
+    public MGArea(@NotNull String name, @NotNull UUID uuid, @NotNull MGLocation loc1, @NotNull MGLocation loc2, int priority, @NotNull MGAreaManager areaManager) throws MGDuplicateIDException {
         this.areaManager = areaManager;
 
         this.areaManager.areaNameCheck(name);

@@ -1,6 +1,6 @@
 package com.rtcal.area;
 
-import com.rtcal.area.exceptions.MGDuplicateAreaID;
+import com.rtcal.area.exceptions.MGDuplicateIDException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -27,14 +27,14 @@ public final class MGAreaManager {
         }
     }
 
-    public void areaNameCheck(@NotNull String name) throws MGDuplicateAreaID {
+    public void areaNameCheck(@NotNull String name) throws MGDuplicateIDException {
         if (areas.containsKey(name))
-            throw new MGDuplicateAreaID("Area with name='" + name + "' already exists");
+            throw new MGDuplicateIDException("Area with name='" + name + "' already exists");
     }
 
-    public void areaIDCheck(@NotNull UUID uuid) throws MGDuplicateAreaID {
+    public void areaIDCheck(@NotNull UUID uuid) throws MGDuplicateIDException {
         if (areas.containsKey(uuid.toString()))
-            throw new MGDuplicateAreaID("Area with uuid='" + uuid + "' already exists");
+            throw new MGDuplicateIDException("Area with uuid='" + uuid + "' already exists");
     }
 
 }

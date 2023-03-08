@@ -1,7 +1,7 @@
 package com.rtcal.area;
 
 
-import com.rtcal.area.exceptions.MGDuplicateAreaID;
+import com.rtcal.area.exceptions.MGDuplicateIDException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MGAreaTest {
 
     @Test
-    public void testIsInside() throws MGDuplicateAreaID {
+    public void testIsInside() throws MGDuplicateIDException {
         MGAreaManager areaManager = new MGAreaManager();
 
         MGArea area = new MGArea(
@@ -34,7 +34,7 @@ public class MGAreaTest {
     }
 
     @Test
-    public void testGetActiveSettings() throws MGDuplicateAreaID {
+    public void testGetActiveSettings() throws MGDuplicateIDException {
         MGAreaManager areaManager = new MGAreaManager();
 
         MGArea area = new MGProtectedArea(
@@ -115,7 +115,7 @@ public class MGAreaTest {
     }
 
     @Test
-    public void testAddChild() throws MGDuplicateAreaID {
+    public void testAddChild() throws MGDuplicateIDException {
         MGAreaManager areaManager = new MGAreaManager();
 
         MGArea area = new MGArea(
@@ -169,7 +169,7 @@ public class MGAreaTest {
     }
 
     @Test
-    public void testRemoveChild() throws MGDuplicateAreaID {
+    public void testRemoveChild() throws MGDuplicateIDException {
         MGAreaManager areaManager = new MGAreaManager();
 
         MGArea area = new MGArea(
@@ -214,21 +214,21 @@ public class MGAreaTest {
 
             assertNotNull(uuid);
 
-            assertThrows(MGDuplicateAreaID.class, () -> new MGArea(name,
+            assertThrows(MGDuplicateIDException.class, () -> new MGArea(name,
                     new MGLocation(0, 0, 0),
                     new MGLocation(10, 10, 10),
                     0,
                     areaManager
             ));
 
-            assertThrows(MGDuplicateAreaID.class, () -> new MGArea("another", uuid,
+            assertThrows(MGDuplicateIDException.class, () -> new MGArea("another", uuid,
                     new MGLocation(0, 0, 0),
                     new MGLocation(10, 10, 10),
                     0,
                     areaManager
             ));
 
-        } catch (MGDuplicateAreaID ignore) {
+        } catch (MGDuplicateIDException ignore) {
         }
     }
 
