@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class MGAreaSettings {
+public class MGAreaSettings {
 
     private final Map<String, MGSettingsFlag<?>> flags = new HashMap<>();
 
