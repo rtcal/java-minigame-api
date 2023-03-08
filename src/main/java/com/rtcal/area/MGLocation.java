@@ -2,6 +2,8 @@ package com.rtcal.area;
 
 public final class MGLocation {
 
+    public static final MGLocation ZERO = new MGLocation(0, 0, 0);
+
     private final int x, y, z;
 
     public MGLocation(final int x, final int y, final int z) {
@@ -24,6 +26,14 @@ public final class MGLocation {
 
     public int getZ() {
         return z;
+    }
+
+    public MGLocation add(MGLocation other) {
+        return new MGLocation(
+                getX() + other.getX(),
+                getY() + other.getY(),
+                getZ() + other.getZ()
+        );
     }
 
     @Override
@@ -66,5 +76,40 @@ public final class MGLocation {
                 Math.max(loc1.getY(), loc2.getY()),
                 Math.max(loc1.getZ(), loc2.getZ())
         );
+    }
+
+    /**
+     * Convert coordinates of location to be positive integers
+     *
+     * @param location location to make positive
+     * @return a MGLocation with positive coordinates
+     */
+    public static MGLocation abs(MGLocation location) {
+        return new MGLocation(
+                Math.abs(location.getX()),
+                Math.abs(location.getY()),
+                Math.abs(location.getZ())
+        );
+    }
+
+    /**
+     * Check whether a location is inside an area
+     *
+     * @param loc1  the first location
+     * @param loc2  the second location
+     * @param check the location to check if it is inside the area created by loc1 and loc2
+     * @return whether the location is within the area created by loc1 and loc2
+     */
+    public static boolean isInside(MGLocation loc1, MGLocation loc2, MGLocation check) {
+        if (loc1 == null || loc2 == null || check == null) return false;
+
+        MGLocation min = MGLocation.getMinimumLocation(loc1, loc2);
+        MGLocation max = MGLocation.getMaximumLocation(loc1, loc2);
+
+        int x = max.getX() - min.getX();
+        int y = max.getY() - min.getY();
+        int z = max.getZ() - min.getZ();
+
+        return x >= 0 && x <= check.getX() && y >= 0 && y <= check.getY() && z >= 0 && z <= check.getZ();
     }
 }
