@@ -1,33 +1,55 @@
 package com.rtcal.area;
 
+import com.rtcal.area.exceptions.MGDuplicateAreaID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class MGArea {
 
+    private static final Map<String, MGArea> areas = new HashMap<>();
+
     private final UUID uuid;
+    private String name;
+    private final int priority;
     private final MGLocation minLoc, maxLoc;
 
     private final Set<MGArea> childAreas = new HashSet<>();
 
-    public MGArea(@NotNull MGLocation loc1, @NotNull MGLocation loc2) {
-        this(UUID.randomUUID(), loc1, loc2);
+    public MGArea(@NotNull String name, @NotNull MGLocation loc1, @NotNull MGLocation loc2, int priority) throws MGDuplicateAreaID {
+        this(name, UUID.randomUUID(), loc1, loc2, priority);
     }
 
-    public MGArea(@NotNull UUID uuid, @NotNull MGLocation loc1, @NotNull MGLocation loc2) {
+    public MGArea(@NotNull String name, @NotNull UUID uuid, @NotNull MGLocation loc1, @NotNull MGLocation loc2, int priority) throws MGDuplicateAreaID {
+        if (areas.containsKey(name)) throw new MGDuplicateAreaID("Area with name='" + name + "' already exists");
+        if (areas.containsKey(uuid.toString())) throw new MGDuplicateAreaID("Area with uuid='" + uuid.toString() + "' already exists");
+
+        this.name = name;
         this.uuid = uuid;
+        this.priority = priority;
 
         this.minLoc = MGLocation.getMinimumLocation(loc1, loc2);
         this.maxLoc = MGLocation.getMaximumLocation(loc1, loc2);
+
+        areas.put(name, this);
+        areas.put(uuid.toString(), this);
     }
 
     public final UUID getID() {
         return uuid;
+    }
+
+    public final String getName() {
+        return name;
+    }
+
+    public final int getPriority() {
+        return priority;
+    }
+
+    public synchronized void setName(String name) {
+        this.name = name;
     }
 
     public final MGLocation getMinLoc() {
@@ -50,7 +72,10 @@ public class MGArea {
         if (childArea == null || childAreas.contains(childArea)) return false;
 
         if (!isInside(childArea.getMinLoc()) || !isInside(childArea.getMaxLoc()))
-            throw new IllegalArgumentException("Child MGArea is not inside parent MGArea");
+            throw new IllegalArgumentException("MGArea child is not inside parent MGArea");
+
+        if (childArea.getPriority() <= getPriority())
+            throw new IllegalArgumentException("MGArea child priority (" + childArea.getPriority() + ") must be greater than parent priority");
 
         return childAreas.add(childArea);
     }
@@ -80,24 +105,24 @@ public class MGArea {
     }
 
     @Nullable
-    public MGAreaSettings getActiveSettings(MGLocation location) {
+    public MGArea getActiveArea(MGLocation location) {
         if (!isInside(location)) return null;
-        if (getChildAreas().size() == 0) return getSettings();
+        if (getChildAreas().size() == 0) return this;
 
-        MGAreaSettings activeSettings = getSettings();
-        MGAreaSettings childActiveSettings;
+        MGArea activeArea = this;
+        MGArea childActiveArea;
 
         for (MGArea childArea : getChildAreas()) {
             if (!(childArea instanceof MGProtectedArea protectedArea)) continue;
 
-            childActiveSettings = protectedArea.getActiveSettings(location);
+            childActiveArea = protectedArea.getActiveArea(location);
 
-            if (childActiveSettings != null) {
-                activeSettings = childActiveSettings;
+            if (childActiveArea != null && childActiveArea.getPriority() > activeArea.getPriority()) {
+                activeArea = childActiveArea;
             }
         }
 
-        return activeSettings;
+        return activeArea;
     }
 
     @Override

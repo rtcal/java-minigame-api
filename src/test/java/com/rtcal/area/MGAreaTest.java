@@ -1,19 +1,23 @@
 package com.rtcal.area;
 
 
+import com.rtcal.area.exceptions.MGDuplicateAreaID;
 import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MGAreaTest {
 
     @Test
-    public void testIsInside() {
+    public void testIsInside() throws MGDuplicateAreaID {
         MGArea area = new MGArea(
+                "testInsideParent",
                 new MGLocation(0, 0, 0),
-                new MGLocation(20, 20, 20)
+                new MGLocation(20, 20, 20),
+                0
         );
 
         assertTrue(area.isInside(new MGLocation(0, 0, 0)));
@@ -27,34 +31,44 @@ public class MGAreaTest {
     }
 
     @Test
-    public void testGetActiveSettings() {
+    public void testGetActiveSettings() throws MGDuplicateAreaID {
         MGArea area = new MGProtectedArea(
+                "getActiveSettingsParent",
                 new MGLocation(0, 0, 0),
                 new MGLocation(20, 20, 20),
-                new MGSimpleTestSettings("parent")
+                new MGSimpleTestSettings("parent"),
+                0
         );
 
         MGArea child1 = new MGProtectedArea(
+                "child1",
                 new MGLocation(0, 0, 0),
                 new MGLocation(10, 10, 10),
-                new MGSimpleTestSettings("child1")
+                new MGSimpleTestSettings("child1"),
+                10
         );
 
         MGArea child2 = new MGProtectedArea(
+                "child2",
                 new MGLocation(0, 0, 0),
                 new MGLocation(5, 5, 5),
-                new MGSimpleTestSettings("child2")
+                new MGSimpleTestSettings("child2"),
+                20
         );
 
         MGArea child3 = new MGProtectedArea(
+                "child3",
                 new MGLocation(8, 8, 8),
                 new MGLocation(12, 12, 12),
-                new MGSimpleTestSettings("child3")
+                new MGSimpleTestSettings("child3"),
+                30
         );
 
         MGArea child4 = new MGArea(
+                "child4",
                 new MGLocation(9, 9, 9),
-                new MGLocation(11, 11, 11)
+                new MGLocation(11, 11, 11),
+                40
         );
 
         child1.addChildArea(child2);
@@ -71,46 +85,61 @@ public class MGAreaTest {
         // between 8,8,8 and 12,12,12 child3 should be returned
         // otherwise parent should be returned
 
-        assertNull(area.getActiveSettings(new MGLocation(-1, -1, 0)));
+        assertNull(area.getActiveArea(new MGLocation(-1, -1, 0)));
 
-        assertNotNull(area.getActiveSettings(new MGLocation(5, 5, 5)));
+        assertNotNull(area.getActiveArea(new MGLocation(5, 5, 5)));
 
-        assertEquals("child3", ((MGSimpleTestSettings) Objects.requireNonNull(area.getActiveSettings(new MGLocation(8, 8, 8)))).getMessage());
-        assertEquals("child3", ((MGSimpleTestSettings) Objects.requireNonNull(area.getActiveSettings(new MGLocation(12, 12, 12)))).getMessage());
+        assertEquals("child3", ((MGSimpleTestSettings) Objects.requireNonNull(area.getActiveArea(new MGLocation(8, 8, 8))).getSettings()).getMessage());
+        assertEquals("child3", ((MGSimpleTestSettings) Objects.requireNonNull(area.getActiveArea(new MGLocation(12, 12, 12))).getSettings()).getMessage());
+//
+//        // Even though this location falls under the child4 object inside child3, because it has no settings, it should fall back to the parent (child3) settings
+        assertEquals("child3", ((MGSimpleTestSettings) Objects.requireNonNull(area.getActiveArea(new MGLocation(10, 10, 10))).getSettings()).getMessage());
 
-        // Even though this location falls under the child4 object inside child3, because it has no settings, it should fall back to the parent (child3) settings
-        assertEquals("child3", ((MGSimpleTestSettings) Objects.requireNonNull(area.getActiveSettings(new MGLocation(10, 10, 10)))).getMessage());
+        assertEquals("child2", ((MGSimpleTestSettings) Objects.requireNonNull(area.getActiveArea(new MGLocation(0, 0, 0))).getSettings()).getMessage());
+        assertEquals("child2", ((MGSimpleTestSettings) Objects.requireNonNull(area.getActiveArea(new MGLocation(5, 5, 5))).getSettings()).getMessage());
 
-        assertEquals("child2", ((MGSimpleTestSettings) Objects.requireNonNull(area.getActiveSettings(new MGLocation(0, 0, 0)))).getMessage());
-        assertEquals("child2", ((MGSimpleTestSettings) Objects.requireNonNull(area.getActiveSettings(new MGLocation(5, 5, 5)))).getMessage());
+        assertEquals("child1", ((MGSimpleTestSettings) Objects.requireNonNull(area.getActiveArea(new MGLocation(6, 6, 6))).getSettings()).getMessage());
+        assertEquals("child1", ((MGSimpleTestSettings) Objects.requireNonNull(area.getActiveArea(new MGLocation(7, 7, 7))).getSettings()).getMessage());
 
-        assertEquals("child1", ((MGSimpleTestSettings) Objects.requireNonNull(area.getActiveSettings(new MGLocation(6, 6, 6)))).getMessage());
-        assertEquals("child1", ((MGSimpleTestSettings) Objects.requireNonNull(area.getActiveSettings(new MGLocation(7, 7, 7)))).getMessage());
-
-        assertEquals("parent", ((MGSimpleTestSettings) Objects.requireNonNull(area.getActiveSettings(new MGLocation(12, 13, 12)))).getMessage());
+        assertEquals("parent", ((MGSimpleTestSettings) Objects.requireNonNull(area.getActiveArea(new MGLocation(12, 13, 12))).getSettings()).getMessage());
     }
 
     @Test
-    public void testAddChild() {
+    public void testAddChild() throws MGDuplicateAreaID {
         MGArea area = new MGArea(
+                "addChildParent",
                 new MGLocation(0, 0, 0),
-                new MGLocation(20, 20, 20)
+                new MGLocation(20, 20, 20),
+                0
         );
 
         MGArea insideChild = new MGArea(
+                "insideChild",
                 new MGLocation(0, 0, 0),
-                new MGLocation(10, 10, 10)
+                new MGLocation(10, 10, 10),
+                10
         );
 
         MGArea insideProtectedChild = new MGProtectedArea(
+                "insideProtectedChild",
                 new MGLocation(0, 0, 0),
                 new MGLocation(10, 10, 10),
-                new MGSimpleTestSettings("insideProtectedChild")
+                new MGSimpleTestSettings("insideProtectedChild"),
+                20
         );
 
         MGArea outsideChild = new MGArea(
+                "outsideChild",
                 new MGLocation(0, 0, 0),
-                new MGLocation(25, 25, 25)
+                new MGLocation(25, 25, 25),
+                30
+        );
+
+        MGArea lowPriorityChild = new MGArea(
+                "lowPriorityChild",
+                new MGLocation(0, 0, 0),
+                new MGLocation(1, 1, 1),
+                -10
         );
 
         assertTrue(area.addChildArea(insideChild));
@@ -119,18 +148,23 @@ public class MGAreaTest {
         assertFalse(area.addChildArea(null));
 
         assertThrows(IllegalArgumentException.class, () -> area.addChildArea(outsideChild));//Attempting to add a child that extends outside the area
+        assertThrows(IllegalArgumentException.class, () -> area.addChildArea(lowPriorityChild)); //Attempting to add a child with lower priority than parent
     }
 
     @Test
-    public void testRemoveChild() {
+    public void testRemoveChild() throws MGDuplicateAreaID {
         MGArea area = new MGArea(
+                "parent",
                 new MGLocation(0, 0, 0),
-                new MGLocation(20, 20, 20)
+                new MGLocation(20, 20, 20),
+                0
         );
 
         MGArea child = new MGArea(
+                "child",
                 new MGLocation(0, 0, 0),
-                new MGLocation(10, 10, 10)
+                new MGLocation(10, 10, 10),
+                10
         );
 
         area.addChildArea(child);
@@ -138,6 +172,36 @@ public class MGAreaTest {
         assertTrue(area.removeChildArea(child));
         assertFalse(area.removeChildArea(child)); //Attempting to remove a child that does not exist
         assertFalse(area.removeChildArea(null));
+    }
+
+    @Test
+    public void testAreaNameAndID() {
+        String name = "baseArea";
+
+        try {
+            MGArea baseArea = new MGArea(
+                    "baseArea",
+                    new MGLocation(0, 0, 0),
+                    new MGLocation(10, 10, 10),
+                    0
+            );
+
+            final UUID uuid = baseArea.getID();
+
+            assertNotNull(uuid);
+
+            assertThrows(MGDuplicateAreaID.class, () -> new MGArea(name,
+                    new MGLocation(0, 0, 0),
+                    new MGLocation(10, 10, 10),
+                    0));
+
+            assertThrows(MGDuplicateAreaID.class, () -> new MGArea("another", uuid,
+                    new MGLocation(0, 0, 0),
+                    new MGLocation(10, 10, 10),
+                    0));
+
+        } catch (MGDuplicateAreaID ignore) {
+        }
     }
 
 }
