@@ -4,11 +4,14 @@ import com.rtcal.area.exceptions.MGDuplicateAreaID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class MGArea {
 
-    private static final Map<String, MGArea> areas = new HashMap<>();
+    private final MGAreaManager areaManager;
 
     private final UUID uuid;
     private String name;
@@ -17,13 +20,15 @@ public class MGArea {
 
     private final Set<MGArea> childAreas = new HashSet<>();
 
-    public MGArea(@NotNull String name, @NotNull MGLocation loc1, @NotNull MGLocation loc2, int priority) throws MGDuplicateAreaID {
-        this(name, UUID.randomUUID(), loc1, loc2, priority);
+    public MGArea(@NotNull String name, @NotNull MGLocation loc1, @NotNull MGLocation loc2, int priority, @NotNull MGAreaManager areaManager) throws MGDuplicateAreaID {
+        this(name, UUID.randomUUID(), loc1, loc2, priority, areaManager);
     }
 
-    public MGArea(@NotNull String name, @NotNull UUID uuid, @NotNull MGLocation loc1, @NotNull MGLocation loc2, int priority) throws MGDuplicateAreaID {
-        if (areas.containsKey(name)) throw new MGDuplicateAreaID("Area with name='" + name + "' already exists");
-        if (areas.containsKey(uuid.toString())) throw new MGDuplicateAreaID("Area with uuid='" + uuid.toString() + "' already exists");
+    public MGArea(@NotNull String name, @NotNull UUID uuid, @NotNull MGLocation loc1, @NotNull MGLocation loc2, int priority, @NotNull MGAreaManager areaManager) throws MGDuplicateAreaID {
+        this.areaManager = areaManager;
+
+        this.areaManager.areaNameCheck(name);
+        this.areaManager.areaIDCheck(uuid);
 
         this.name = name;
         this.uuid = uuid;
@@ -32,14 +37,20 @@ public class MGArea {
         this.minLoc = MGLocation.getMinimumLocation(loc1, loc2);
         this.maxLoc = MGLocation.getMaximumLocation(loc1, loc2);
 
-        areas.put(name, this);
-        areas.put(uuid.toString(), this);
+        this.areaManager.registerArea(this);
     }
 
+    @NotNull
+    public MGAreaManager getAreaManager() {
+        return this.areaManager;
+    }
+
+    @NotNull
     public final UUID getID() {
         return uuid;
     }
 
+    @NotNull
     public final String getName() {
         return name;
     }
@@ -52,12 +63,18 @@ public class MGArea {
         this.name = name;
     }
 
+    @NotNull
     public final MGLocation getMinLoc() {
         return minLoc;
     }
 
+    @NotNull
     public final MGLocation getMaxLoc() {
         return maxLoc;
+    }
+
+    public boolean hasChildAreas() {
+        return childAreas.size() > 0;
     }
 
     public Set<MGArea> getChildAreas() {
@@ -107,17 +124,17 @@ public class MGArea {
     @Nullable
     public MGArea getActiveArea(MGLocation location) {
         if (!isInside(location)) return null;
-        if (getChildAreas().size() == 0) return this;
+        if (hasChildAreas()) return this;
 
         MGArea activeArea = this;
         MGArea childActiveArea;
 
         for (MGArea childArea : getChildAreas()) {
-            if (!(childArea instanceof MGProtectedArea protectedArea)) continue;
+//            if (!(childArea instanceof MGProtectedArea protectedArea)) continue;
 
-            childActiveArea = protectedArea.getActiveArea(location);
+            childActiveArea = childArea.getActiveArea(location);
 
-            if (childActiveArea != null && childActiveArea.getPriority() > activeArea.getPriority()) {
+            if (childActiveArea != null && childActiveArea.getSettings() != null && childActiveArea.getPriority() > activeArea.getPriority()) {
                 activeArea = childActiveArea;
             }
         }
@@ -129,7 +146,7 @@ public class MGArea {
     public String toString() {
         String childAreaString = "";
 
-        if (childAreas.size() > 0) {
+        if (hasChildAreas()) {
             List<String> childAreaStrings = childAreas.stream().map(MGArea::toString).toList();
             childAreaString = String.join(",", childAreaStrings);
         }

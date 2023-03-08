@@ -13,11 +13,14 @@ public class MGAreaTest {
 
     @Test
     public void testIsInside() throws MGDuplicateAreaID {
+        MGAreaManager areaManager = new MGAreaManager();
+
         MGArea area = new MGArea(
                 "testInsideParent",
                 new MGLocation(0, 0, 0),
                 new MGLocation(20, 20, 20),
-                0
+                0,
+                areaManager
         );
 
         assertTrue(area.isInside(new MGLocation(0, 0, 0)));
@@ -32,12 +35,15 @@ public class MGAreaTest {
 
     @Test
     public void testGetActiveSettings() throws MGDuplicateAreaID {
+        MGAreaManager areaManager = new MGAreaManager();
+
         MGArea area = new MGProtectedArea(
                 "getActiveSettingsParent",
                 new MGLocation(0, 0, 0),
                 new MGLocation(20, 20, 20),
                 new MGSimpleTestSettings("parent"),
-                0
+                0,
+                areaManager
         );
 
         MGArea child1 = new MGProtectedArea(
@@ -45,7 +51,8 @@ public class MGAreaTest {
                 new MGLocation(0, 0, 0),
                 new MGLocation(10, 10, 10),
                 new MGSimpleTestSettings("child1"),
-                10
+                10,
+                areaManager
         );
 
         MGArea child2 = new MGProtectedArea(
@@ -53,7 +60,8 @@ public class MGAreaTest {
                 new MGLocation(0, 0, 0),
                 new MGLocation(5, 5, 5),
                 new MGSimpleTestSettings("child2"),
-                20
+                20,
+                areaManager
         );
 
         MGArea child3 = new MGProtectedArea(
@@ -61,22 +69,24 @@ public class MGAreaTest {
                 new MGLocation(8, 8, 8),
                 new MGLocation(12, 12, 12),
                 new MGSimpleTestSettings("child3"),
-                30
+                30,
+                areaManager
         );
 
         MGArea child4 = new MGArea(
                 "child4",
                 new MGLocation(9, 9, 9),
                 new MGLocation(11, 11, 11),
-                40
+                40,
+                areaManager
         );
 
-        child1.addChildArea(child2);
+        assertTrue(child1.addChildArea(child2));
 
-        child3.addChildArea(child4);
+        assertTrue(child3.addChildArea(child4));
 
-        area.addChildArea(child1);
-        area.addChildArea(child3);
+        assertTrue(area.addChildArea(child1));
+        assertTrue(area.addChildArea(child3));
 
         // While making checks on area
         // outside the boundaries of area should return null
@@ -106,18 +116,22 @@ public class MGAreaTest {
 
     @Test
     public void testAddChild() throws MGDuplicateAreaID {
+        MGAreaManager areaManager = new MGAreaManager();
+
         MGArea area = new MGArea(
                 "addChildParent",
                 new MGLocation(0, 0, 0),
                 new MGLocation(20, 20, 20),
-                0
+                0,
+                areaManager
         );
 
         MGArea insideChild = new MGArea(
                 "insideChild",
                 new MGLocation(0, 0, 0),
                 new MGLocation(10, 10, 10),
-                10
+                10,
+                areaManager
         );
 
         MGArea insideProtectedChild = new MGProtectedArea(
@@ -125,21 +139,24 @@ public class MGAreaTest {
                 new MGLocation(0, 0, 0),
                 new MGLocation(10, 10, 10),
                 new MGSimpleTestSettings("insideProtectedChild"),
-                20
+                20,
+                areaManager
         );
 
         MGArea outsideChild = new MGArea(
                 "outsideChild",
                 new MGLocation(0, 0, 0),
                 new MGLocation(25, 25, 25),
-                30
+                30,
+                areaManager
         );
 
         MGArea lowPriorityChild = new MGArea(
                 "lowPriorityChild",
                 new MGLocation(0, 0, 0),
                 new MGLocation(1, 1, 1),
-                -10
+                -10,
+                areaManager
         );
 
         assertTrue(area.addChildArea(insideChild));
@@ -153,18 +170,22 @@ public class MGAreaTest {
 
     @Test
     public void testRemoveChild() throws MGDuplicateAreaID {
+        MGAreaManager areaManager = new MGAreaManager();
+
         MGArea area = new MGArea(
                 "parent",
                 new MGLocation(0, 0, 0),
                 new MGLocation(20, 20, 20),
-                0
+                0,
+                areaManager
         );
 
         MGArea child = new MGArea(
                 "child",
                 new MGLocation(0, 0, 0),
                 new MGLocation(10, 10, 10),
-                10
+                10,
+                areaManager
         );
 
         area.addChildArea(child);
@@ -176,6 +197,8 @@ public class MGAreaTest {
 
     @Test
     public void testAreaNameAndID() {
+        MGAreaManager areaManager = new MGAreaManager();
+
         String name = "baseArea";
 
         try {
@@ -183,7 +206,8 @@ public class MGAreaTest {
                     "baseArea",
                     new MGLocation(0, 0, 0),
                     new MGLocation(10, 10, 10),
-                    0
+                    0,
+                    areaManager
             );
 
             final UUID uuid = baseArea.getID();
@@ -193,12 +217,16 @@ public class MGAreaTest {
             assertThrows(MGDuplicateAreaID.class, () -> new MGArea(name,
                     new MGLocation(0, 0, 0),
                     new MGLocation(10, 10, 10),
-                    0));
+                    0,
+                    areaManager
+            ));
 
             assertThrows(MGDuplicateAreaID.class, () -> new MGArea("another", uuid,
                     new MGLocation(0, 0, 0),
                     new MGLocation(10, 10, 10),
-                    0));
+                    0,
+                    areaManager
+            ));
 
         } catch (MGDuplicateAreaID ignore) {
         }
