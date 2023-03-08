@@ -14,7 +14,7 @@ public class MGAreaTest {
         MGArea area = new MGArea(
                 new MGLocation(0, 0, 0),
                 new MGLocation(20, 20, 20),
-                new MGSimpleTestSettings(0, "parent")
+                new MGSimpleTestSettings("parent")
         );
 
         assertTrue(area.isInside(new MGLocation(0, 0, 0)));
@@ -32,25 +32,25 @@ public class MGAreaTest {
         MGArea area = new MGArea(
                 new MGLocation(0, 0, 0),
                 new MGLocation(20, 20, 20),
-                new MGSimpleTestSettings(0, "parent")
+                new MGSimpleTestSettings("parent")
         );
 
         MGArea child1 = new MGArea(
                 new MGLocation(0, 0, 0),
                 new MGLocation(10, 10, 10),
-                new MGSimpleTestSettings(5, "child1")
+                new MGSimpleTestSettings("child1")
         );
 
         MGArea child2 = new MGArea(
                 new MGLocation(0, 0, 0),
                 new MGLocation(5, 5, 5),
-                new MGSimpleTestSettings(10, "child2")
+                new MGSimpleTestSettings("child2")
         );
 
         MGArea child3 = new MGArea(
                 new MGLocation(8, 8, 8),
                 new MGLocation(12, 12, 12),
-                new MGSimpleTestSettings(20, "child3")
+                new MGSimpleTestSettings("child3")
         );
 
         child1.addChildArea(child2);
@@ -86,19 +86,19 @@ public class MGAreaTest {
         MGArea area = new MGArea(
                 new MGLocation(0, 0, 0),
                 new MGLocation(20, 20, 20),
-                new MGSimpleTestSettings(0, "parent")
+                new MGSimpleTestSettings("parent")
         );
 
         MGArea insideChild = new MGArea(
                 new MGLocation(0, 0, 0),
                 new MGLocation(10, 10, 10),
-                new MGSimpleTestSettings(5, "insideChild")
+                new MGSimpleTestSettings("insideChild")
         );
 
         MGArea outsideChild = new MGArea(
                 new MGLocation(0, 0, 0),
                 new MGLocation(25, 25, 25),
-                new MGSimpleTestSettings(5, "outsideChild")
+                new MGSimpleTestSettings("outsideChild")
         );
 
         assertTrue(area.addChildArea(insideChild));
@@ -113,13 +113,13 @@ public class MGAreaTest {
         MGArea area = new MGArea(
                 new MGLocation(0, 0, 0),
                 new MGLocation(20, 20, 20),
-                new MGSimpleTestSettings(0, "parent")
+                new MGSimpleTestSettings("parent")
         );
 
         MGArea child = new MGArea(
                 new MGLocation(0, 0, 0),
                 new MGLocation(10, 10, 10),
-                new MGSimpleTestSettings(5, "child1")
+                new MGSimpleTestSettings("child1")
         );
 
         area.addChildArea(child);

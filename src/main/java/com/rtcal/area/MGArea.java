@@ -98,7 +98,7 @@ public class MGArea {
         for (MGArea childArea : childAreas) {
             childActiveSettings = childArea.getActiveSettings(location);
 
-            if (childActiveSettings != null && childActiveSettings.getPriority() > activeSettings.getPriority()) {
+            if (childActiveSettings != null) {
                 activeSettings = childActiveSettings;
             }
         }
