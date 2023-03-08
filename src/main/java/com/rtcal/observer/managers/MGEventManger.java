@@ -3,7 +3,7 @@ package com.rtcal.observer.managers;
 import com.rtcal.observer.event.MGEvent;
 import com.rtcal.observer.event.MGEventHandler;
 import com.rtcal.observer.event.MGListener;
-import com.rtcal.observer.exceptions.MGEventException;
+import com.rtcal.exceptions.MGEventException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

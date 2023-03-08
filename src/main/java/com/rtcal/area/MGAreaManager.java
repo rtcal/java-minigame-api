@@ -1,6 +1,6 @@
 package com.rtcal.area;
 
-import com.rtcal.area.exceptions.MGDuplicateIDException;
+import com.rtcal.exceptions.MGDuplicateIDException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;

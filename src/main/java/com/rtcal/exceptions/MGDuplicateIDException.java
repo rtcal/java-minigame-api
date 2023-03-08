@@ -1,4 +1,4 @@
-package com.rtcal.area.exceptions;
+package com.rtcal.exceptions;
 
 public class MGDuplicateIDException extends Exception {
     public MGDuplicateIDException() {

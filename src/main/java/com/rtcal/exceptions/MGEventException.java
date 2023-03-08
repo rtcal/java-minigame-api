@@ -1,4 +1,4 @@
-package com.rtcal.observer.exceptions;
+package com.rtcal.exceptions;
 
 public class MGEventException extends Exception {
 
