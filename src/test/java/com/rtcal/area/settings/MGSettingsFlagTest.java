@@ -1,10 +1,10 @@
-package com.rtcal.area.flag;
+package com.rtcal.area.settings;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MGFlagTest {
+public class MGSettingsFlagTest {
 
     @Test
     public void flagChecks() {
@@ -13,11 +13,11 @@ public class MGFlagTest {
         assertTrue(settings.hasFlag("pvp"));
         assertFalse(settings.hasFlag("unknown"));
 
-        MGFlagBoolean mgFlagBoolean = (MGFlagBoolean) settings.getFlag("pvp");
+        MGSettingsFlagBoolean mgFlagBoolean = (MGSettingsFlagBoolean) settings.getFlag("pvp");
         assertNotNull(mgFlagBoolean);
         assertTrue(mgFlagBoolean.getValue());
 
-        MGFlagString mgFlagString = (MGFlagString) settings.getFlag("unknown");
+        MGSettingsFlagString mgFlagString = (MGSettingsFlagString) settings.getFlag("unknown");
         assertNull(mgFlagString);
     }
 

@@ -1,12 +1,12 @@
-package com.rtcal.area.flag;
+package com.rtcal.area.settings;
 
-public abstract class MGFlag<T> {
+public abstract class MGSettingsFlag<T> {
 
     private final String name;
     private final T defaultValue;
     private T value;
 
-    public MGFlag(String name, T defaultValue, T value) {
+    public MGSettingsFlag(String name, T defaultValue, T value) {
         this.name = name;
         this.value = value;
         this.defaultValue = defaultValue;

@@ -1,6 +1,6 @@
 package com.rtcal.area;
 
-import com.rtcal.area.flag.MGFlag;
+import com.rtcal.area.settings.MGSettingsFlag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,10 +9,10 @@ import java.util.Map;
 
 public abstract class MGAreaSettings {
 
-    private final Map<String, MGFlag<?>> flags = new HashMap<>();
+    private final Map<String, MGSettingsFlag<?>> flags = new HashMap<>();
 
-    public MGAreaSettings(MGFlag<?>... flags) {
-        for (MGFlag<?> flag : flags) {
+    public MGAreaSettings(MGSettingsFlag<?>... flags) {
+        for (MGSettingsFlag<?> flag : flags) {
             this.flags.put(flag.getName(), flag);
         }
     }
@@ -22,11 +22,11 @@ public abstract class MGAreaSettings {
     }
 
     @Nullable
-    public MGFlag<?> getFlag(@NotNull String name) {
+    public MGSettingsFlag<?> getFlag(@NotNull String name) {
         return flags.get(name);
     }
 
-    public void setFlag(@NotNull MGFlag<?> flag) {
+    public void setFlag(@NotNull MGSettingsFlag<?> flag) {
         flags.put(flag.getName(), flag);
     }
 

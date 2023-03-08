@@ -1,4 +1,4 @@
-package com.rtcal.area.flag;
+package com.rtcal.area.settings;
 
 import com.rtcal.area.MGAreaSettings;
 
@@ -6,8 +6,8 @@ public class MGSimpleFlagTestSettings extends MGAreaSettings {
 
     public MGSimpleFlagTestSettings(){
         super(
-                new MGFlagBoolean("pvp", true),
-                new MGFlagInt("val", 1)
+                new MGSettingsFlagBoolean("pvp", true),
+                new MGSettingsFlagInt("val", 1)
         );
     }
 
