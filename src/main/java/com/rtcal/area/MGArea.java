@@ -1,5 +1,11 @@
 package com.rtcal.area;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class MGArea {
@@ -10,11 +16,13 @@ public class MGArea {
 
     private boolean settingsEnabled = true;
 
-    public MGArea(MGLocation loc1, MGLocation loc2, MGAreaSettings settings) {
+    private final Set<MGArea> childAreas = new HashSet<>();
+
+    public MGArea(@NotNull MGLocation loc1, @NotNull MGLocation loc2, @NotNull MGAreaSettings settings) {
         this(UUID.randomUUID(), loc1, loc2, settings);
     }
 
-    public MGArea(UUID uuid, MGLocation loc1, MGLocation loc2, MGAreaSettings settings) {
+    public MGArea(@NotNull UUID uuid, @NotNull MGLocation loc1, @NotNull MGLocation loc2, @NotNull MGAreaSettings settings) {
         this.uuid = uuid;
         this.settings = settings;
 
@@ -34,7 +42,7 @@ public class MGArea {
         return settingsEnabled;
     }
 
-    public void toggleSettings(boolean enabled) {
+    public synchronized void toggleSettings(boolean enabled) {
         this.settingsEnabled = enabled;
     }
 
@@ -46,6 +54,19 @@ public class MGArea {
         return maxLoc;
     }
 
+    public synchronized boolean addChildArea(MGArea childArea) throws IllegalArgumentException {
+        if (childArea == null || childAreas.contains(childArea)) return false;
+
+        if (!isInside(childArea.getMinLoc()) || !isInside(childArea.getMaxLoc()))
+            throw new IllegalArgumentException("Child MGArea is not inside parent MGArea");
+
+        return childAreas.add(childArea);
+    }
+
+    public synchronized boolean removeChildArea(MGArea childArea) {
+        return childArea != null && childAreas.remove(childArea);
+    }
+
     /**
      * Check whether a location is inside an area
      *
@@ -53,6 +74,8 @@ public class MGArea {
      * @return whether the location is within the area
      */
     public boolean isInside(MGLocation location) {
+        if (location == null) return false;
+
         int x = location.getX();
         int y = location.getY();
         int z = location.getZ();
@@ -64,9 +87,39 @@ public class MGArea {
         return insideX && insideY && insideZ;
     }
 
+    @Nullable
+    public MGAreaSettings getActiveSettings(MGLocation location) {
+        if (!isInside(location)) return null;
+        if (childAreas.size() == 0) return getSettings();
+
+        MGAreaSettings activeSettings = getSettings();
+        MGAreaSettings childActiveSettings;
+
+        for (MGArea childArea : childAreas) {
+            childActiveSettings = childArea.getActiveSettings(location);
+
+            if (childActiveSettings != null && childActiveSettings.getPriority() > activeSettings.getPriority()) {
+                activeSettings = childActiveSettings;
+            }
+        }
+
+        return activeSettings;
+    }
+
     @Override
     public String toString() {
-        return "MGArea{uuid=" + getID().toString() + ",minLocation=" + getMinLoc().toString() + ",maxLocation=" + getMaxLoc().toString() + "}";
+        String childAreaString = "";
+
+        if (childAreas.size() > 0) {
+            List<String> childAreaStrings = childAreas.stream().map(MGArea::toString).toList();
+            childAreaString = String.join(",", childAreaStrings);
+        }
+
+        return "MGArea{uuid=" + getID().toString() +
+                ",minLocation=" + getMinLoc().toString() +
+                ",maxLocation=" + getMaxLoc().toString() +
+                ",children=[" + childAreaString + "]" +
+                "}";
     }
 
     @Override
