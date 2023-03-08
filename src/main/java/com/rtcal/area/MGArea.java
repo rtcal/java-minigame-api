@@ -11,20 +11,16 @@ import java.util.UUID;
 public class MGArea {
 
     private final UUID uuid;
-    private final MGAreaSettings settings;
     private final MGLocation minLoc, maxLoc;
-
-    private boolean settingsEnabled = true;
 
     private final Set<MGArea> childAreas = new HashSet<>();
 
-    public MGArea(@NotNull MGLocation loc1, @NotNull MGLocation loc2, @NotNull MGAreaSettings settings) {
-        this(UUID.randomUUID(), loc1, loc2, settings);
+    public MGArea(@NotNull MGLocation loc1, @NotNull MGLocation loc2) {
+        this(UUID.randomUUID(), loc1, loc2);
     }
 
-    public MGArea(@NotNull UUID uuid, @NotNull MGLocation loc1, @NotNull MGLocation loc2, @NotNull MGAreaSettings settings) {
+    public MGArea(@NotNull UUID uuid, @NotNull MGLocation loc1, @NotNull MGLocation loc2) {
         this.uuid = uuid;
-        this.settings = settings;
 
         this.minLoc = MGLocation.getMinimumLocation(loc1, loc2);
         this.maxLoc = MGLocation.getMaximumLocation(loc1, loc2);
@@ -34,24 +30,20 @@ public class MGArea {
         return uuid;
     }
 
-    public final MGAreaSettings getSettings() {
-        return settings;
-    }
-
-    public boolean areSettingsEnabled() {
-        return settingsEnabled;
-    }
-
-    public synchronized void toggleSettings(boolean enabled) {
-        this.settingsEnabled = enabled;
-    }
-
     public final MGLocation getMinLoc() {
         return minLoc;
     }
 
     public final MGLocation getMaxLoc() {
         return maxLoc;
+    }
+
+    public Set<MGArea> getChildAreas() {
+        return childAreas;
+    }
+
+    public MGAreaSettings getSettings() {
+        return null;
     }
 
     public synchronized boolean addChildArea(MGArea childArea) throws IllegalArgumentException {
@@ -90,13 +82,15 @@ public class MGArea {
     @Nullable
     public MGAreaSettings getActiveSettings(MGLocation location) {
         if (!isInside(location)) return null;
-        if (childAreas.size() == 0) return getSettings();
+        if (getChildAreas().size() == 0) return getSettings();
 
         MGAreaSettings activeSettings = getSettings();
         MGAreaSettings childActiveSettings;
 
-        for (MGArea childArea : childAreas) {
-            childActiveSettings = childArea.getActiveSettings(location);
+        for (MGArea childArea : getChildAreas()) {
+            if (!(childArea instanceof MGProtectedArea protectedArea)) continue;
+
+            childActiveSettings = protectedArea.getActiveSettings(location);
 
             if (childActiveSettings != null) {
                 activeSettings = childActiveSettings;
