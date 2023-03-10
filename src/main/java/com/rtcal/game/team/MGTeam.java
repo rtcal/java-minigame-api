@@ -2,7 +2,6 @@ package com.rtcal.game.team;
 
 import com.rtcal.exceptions.MGDuplicateException;
 import com.rtcal.exceptions.MGPlayerBusyException;
-import com.rtcal.game.MGTeamManager;
 import com.rtcal.game.player.MGPlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,12 +18,10 @@ public class MGTeam {
     private final String name;
     private final int capacity;
 
-    public MGTeam(@NotNull String name, int capacity) throws MGDuplicateException {
+    public MGTeam(@NotNull String name, int capacity) {
         this.name = name;
         this.capacity = capacity;
         this.teamID = UUID.randomUUID();
-
-        MGTeamManager.getInstance().registerTeam(this);
     }
 
     public UUID getTeamID() {
@@ -47,6 +44,7 @@ public class MGTeam {
         return players.contains(player);
     }
 
+    // TODO: get the arena the team is a member of and and register that the player is in that arena
     public void addPlayer(@NotNull MGPlayer player) throws MGDuplicateException, MGPlayerBusyException {
         if (containsPlayer(player)) throw new MGDuplicateException("MGPlayer '" + player.getName() + "' already part of MGTeam '" + getName() + "'");
         if (player.hasTeam()) throw new MGPlayerBusyException("MGPlayer '" + player.getName() + "' already has a team");
@@ -80,14 +78,6 @@ public class MGTeam {
 
         if (!getTeamID().equals(other.getTeamID())) return false;
         return getName().equals(other.getName());
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 17;
-        hash = 31 * hash + getTeamID().hashCode();
-        hash = 31 * hash + getName().hashCode();
-        return hash;
     }
 
 }

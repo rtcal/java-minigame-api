@@ -1,8 +1,13 @@
 package com.rtcal.game.map;
 
 import com.rtcal.game.area.MGArea;
+import com.rtcal.game.area.MGLocation;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * MGMap links a map name to a playable MGArea
+ */
 public class MGMap {
 
     private final String name;
@@ -11,6 +16,16 @@ public class MGMap {
     public MGMap(@NotNull final String name, @NotNull final MGArea area) {
         this.name = name;
         this.area = area;
+    }
+
+    public MGMap(@NotNull MGMap original, @Nullable MGLocation mapOffset) {
+        this.name = original.getName();
+
+        if (mapOffset == null) {
+            this.area = original.area;
+        } else {
+            this.area = original.area.cloneMGAreaWithOffset(mapOffset);
+        }
     }
 
     public final String getName() {
@@ -29,8 +44,8 @@ public class MGMap {
     @Override
     public int hashCode() {
         int hash = 17;
-        hash = 31 * hash + "MGMap".hashCode();
         hash = 31 * hash + getName().hashCode();
+        hash = 31 * hash + getArea().hashCode();
         return hash;
     }
 }

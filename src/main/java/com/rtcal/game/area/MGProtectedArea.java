@@ -12,12 +12,10 @@ public class MGProtectedArea extends MGArea {
         this.settings = settings;
     }
 
-    @Override
     public MGAreaSettings getSettings() {
         return settings;
     }
 
-    @Override
     public boolean areSettingsEnabled() {
         return settingsEnabled;
     }
@@ -28,9 +26,7 @@ public class MGProtectedArea extends MGArea {
 
     @Override
     public MGProtectedArea cloneMGAreaWithOffset(@NotNull MGLocation offset) {
-        MGProtectedArea area = new MGProtectedArea(getMinLocation().add(offset), getMaxLocation().add(offset), settings);
-        area.toggleSettings(areSettingsEnabled());
-        return area;
+        return new MGProtectedArea(getMinLocation().add(offset), getMaxLocation().add(offset), getSettings());
     }
 
     @Override

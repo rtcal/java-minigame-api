@@ -1,6 +1,7 @@
 package com.rtcal.game.area;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class MGLocation {
 
@@ -30,7 +31,9 @@ public final class MGLocation {
         return z;
     }
 
-    public MGLocation add(@NotNull MGLocation other) {
+    public MGLocation add(@Nullable MGLocation other) {
+        if (other == null) return this;
+
         return new MGLocation(
                 getX() + other.getX(),
                 getY() + other.getY(),
