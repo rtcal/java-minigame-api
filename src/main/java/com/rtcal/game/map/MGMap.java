@@ -29,6 +29,7 @@ public class MGMap {
     @Override
     public int hashCode() {
         int hash = 17;
+        hash = 31 * hash + "MGMap".hashCode();
         hash = 31 * hash + getName().hashCode();
         return hash;
     }

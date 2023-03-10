@@ -43,4 +43,17 @@ public class MGPlayer {
         this.team = team;
     }
 
+    @Override
+    public String toString() {
+        return "MGPlayer{uuid=" + getPlayerID() + ",name=" + getName() + "}";
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 17;
+        hash = 31 * hash + getPlayerID().hashCode();
+        hash = 31 * hash + getName().hashCode();
+        return hash;
+    }
+
 }

@@ -30,7 +30,7 @@ public final class MGArenaType {
         return instance;
     }
 
-    public synchronized void register(@NotNull String type) {
+    public void register(@NotNull String type) {
         lock.lock();
         try {
             types.add(type);
@@ -39,7 +39,7 @@ public final class MGArenaType {
         }
     }
 
-    public synchronized void unregister(@NotNull String type) {
+    public void unregister(@NotNull String type) {
         lock.lock();
         try {
             types.remove(type);
