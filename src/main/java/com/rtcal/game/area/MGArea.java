@@ -18,14 +18,6 @@ public class MGArea {
         return maxLocation;
     }
 
-    public MGAreaSettings getSettings() {
-        return null;
-    }
-
-    public boolean areSettingsEnabled() {
-        return false;
-    }
-
     public MGArea cloneMGAreaWithOffset(@NotNull MGLocation offset) {
         return new MGArea(getMinLocation().add(offset), getMaxLocation().add(offset));
     }
