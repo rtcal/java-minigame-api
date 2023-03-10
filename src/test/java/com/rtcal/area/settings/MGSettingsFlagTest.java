@@ -1,5 +1,7 @@
 package com.rtcal.area.settings;
 
+import com.rtcal.game.area.settings.MGSettingsFlagBoolean;
+import com.rtcal.game.area.settings.MGSettingsFlagString;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

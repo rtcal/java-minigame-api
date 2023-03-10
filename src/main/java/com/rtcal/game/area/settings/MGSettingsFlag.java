@@ -1,4 +1,6 @@
-package com.rtcal.area.settings;
+package com.rtcal.game.area.settings;
+
+import org.jetbrains.annotations.NotNull;
 
 public abstract class MGSettingsFlag<T> {
 
@@ -6,7 +8,7 @@ public abstract class MGSettingsFlag<T> {
     private final T defaultValue;
     private T value;
 
-    public MGSettingsFlag(String name, T defaultValue, T value) {
+    public MGSettingsFlag(@NotNull String name, @NotNull T defaultValue, @NotNull T value) {
         this.name = name;
         this.value = value;
         this.defaultValue = defaultValue;
@@ -24,7 +26,7 @@ public abstract class MGSettingsFlag<T> {
         return value;
     }
 
-    public void setValue(T value) {
+    public void setValue(@NotNull T value) {
         this.value = value;
     }
 

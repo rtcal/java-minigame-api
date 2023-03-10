@@ -1,6 +1,6 @@
-package com.rtcal.map;
+package com.rtcal.game.map;
 
-import com.rtcal.area.MGArea;
+import com.rtcal.game.area.MGArea;
 import org.jetbrains.annotations.NotNull;
 
 public class MGMap {

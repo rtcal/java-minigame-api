@@ -1,6 +1,6 @@
-package com.rtcal.area;
+package com.rtcal.game.area;
 
-import com.rtcal.area.settings.MGSettingsFlag;
+import com.rtcal.game.area.settings.MGSettingsFlag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

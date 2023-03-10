@@ -1,6 +1,8 @@
 package com.rtcal.area;
 
 
+import com.rtcal.game.area.MGArea;
+import com.rtcal.game.area.MGLocation;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;

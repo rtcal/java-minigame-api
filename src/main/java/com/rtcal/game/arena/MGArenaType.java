@@ -1,4 +1,6 @@
-package com.rtcal.arena;
+package com.rtcal.game.arena;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,7 +30,7 @@ public final class MGArenaType {
         return instance;
     }
 
-    public synchronized void register(String type) {
+    public synchronized void register(@NotNull String type) {
         lock.lock();
         try {
             types.add(type);
@@ -37,7 +39,7 @@ public final class MGArenaType {
         }
     }
 
-    public synchronized void unregister(String type) {
+    public synchronized void unregister(@NotNull String type) {
         lock.lock();
         try {
             types.remove(type);
@@ -46,7 +48,7 @@ public final class MGArenaType {
         }
     }
 
-    public boolean isType(String type) {
+    public boolean isType(@NotNull String type) {
         lock.lock();
         try {
             return types.contains(type);

@@ -1,4 +1,4 @@
-package com.rtcal.area;
+package com.rtcal.game.area;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +26,7 @@ public class MGArea {
         return false;
     }
 
-    public MGArea cloneMGAreaWithOffset(MGLocation offset) {
+    public MGArea cloneMGAreaWithOffset(@NotNull MGLocation offset) {
         return new MGArea(getMinLocation().add(offset), getMaxLocation().add(offset));
     }
 
@@ -36,7 +36,7 @@ public class MGArea {
      * @param location the location to be checked
      * @return whether the location is within the area
      */
-    public boolean isInside(MGLocation location) {
+    public boolean isInside(@NotNull MGLocation location) {
         return MGLocation.isInside(getMinLocation(), getMaxLocation(), location);
     }
 

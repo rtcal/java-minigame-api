@@ -1,4 +1,6 @@
-package com.rtcal.area;
+package com.rtcal.game.area;
+
+import org.jetbrains.annotations.NotNull;
 
 public final class MGLocation {
 
@@ -28,7 +30,7 @@ public final class MGLocation {
         return z;
     }
 
-    public MGLocation add(MGLocation other) {
+    public MGLocation add(@NotNull MGLocation other) {
         return new MGLocation(
                 getX() + other.getX(),
                 getY() + other.getY(),
@@ -62,7 +64,7 @@ public final class MGLocation {
         return hash;
     }
 
-    public static MGLocation getMinimumLocation(MGLocation loc1, MGLocation loc2) {
+    public static MGLocation getMinimumLocation(@NotNull MGLocation loc1, @NotNull MGLocation loc2) {
         return new MGLocation(
                 Math.min(loc1.getX(), loc2.getX()),
                 Math.min(loc1.getY(), loc2.getY()),
@@ -70,7 +72,7 @@ public final class MGLocation {
         );
     }
 
-    public static MGLocation getMaximumLocation(MGLocation loc1, MGLocation loc2) {
+    public static MGLocation getMaximumLocation(@NotNull MGLocation loc1, @NotNull MGLocation loc2) {
         return new MGLocation(
                 Math.max(loc1.getX(), loc2.getX()),
                 Math.max(loc1.getY(), loc2.getY()),
@@ -84,7 +86,7 @@ public final class MGLocation {
      * @param location location to make positive
      * @return a MGLocation with positive coordinates
      */
-    public static MGLocation abs(MGLocation location) {
+    public static MGLocation abs(@NotNull MGLocation location) {
         return new MGLocation(
                 Math.abs(location.getX()),
                 Math.abs(location.getY()),
@@ -100,8 +102,7 @@ public final class MGLocation {
      * @param check the location to check if it is inside the area created by loc1 and loc2
      * @return whether the location is within the area created by loc1 and loc2
      */
-    public static boolean isInside(MGLocation loc1, MGLocation loc2, MGLocation check) {
-        if (loc1 == null || loc2 == null || check == null) return false;
+    public static boolean isInside(@NotNull MGLocation loc1, @NotNull MGLocation loc2, @NotNull MGLocation check) {
 
         MGLocation min = MGLocation.getMinimumLocation(loc1, loc2);
         MGLocation max = MGLocation.getMaximumLocation(loc1, loc2);

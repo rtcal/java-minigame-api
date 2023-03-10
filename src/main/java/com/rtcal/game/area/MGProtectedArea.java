@@ -1,4 +1,4 @@
-package com.rtcal.area;
+package com.rtcal.game.area;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +27,7 @@ public class MGProtectedArea extends MGArea {
     }
 
     @Override
-    public MGProtectedArea cloneMGAreaWithOffset(MGLocation offset) {
+    public MGProtectedArea cloneMGAreaWithOffset(@NotNull MGLocation offset) {
         MGProtectedArea area = new MGProtectedArea(getMinLocation().add(offset), getMaxLocation().add(offset), settings);
         area.toggleSettings(areSettingsEnabled());
         return area;
