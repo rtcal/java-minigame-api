@@ -5,13 +5,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MGPlayer {
+
+    private final Lock teamLock = new ReentrantLock();
+    private final Lock nameLock = new ReentrantLock();
 
     private final UUID playerID;
     private String name;
 
-    private MGTeam team;
+    private volatile MGTeam team;
 
     public MGPlayer(@NotNull UUID playerID, @NotNull String name) {
         this.playerID = playerID;
@@ -23,24 +28,49 @@ public class MGPlayer {
     }
 
     public String getName() {
-        return name;
+        nameLock.lock();
+        try {
+            return name;
+        } finally {
+            nameLock.unlock();
+        }
     }
 
     public void setName(String name) {
-        this.name = name;
+        nameLock.lock();
+        try {
+            this.name = name;
+        } finally {
+            nameLock.unlock();
+        }
     }
 
     public boolean hasTeam() {
-        return getTeam() != null;
+        teamLock.lock();
+        try {
+            return getTeam() != null;
+        } finally {
+            teamLock.unlock();
+        }
     }
 
     @Nullable
     public MGTeam getTeam() {
-        return team;
+        teamLock.lock();
+        try {
+            return team;
+        } finally {
+            teamLock.unlock();
+        }
     }
 
     public void setTeam(MGTeam team) {
-        this.team = team;
+        teamLock.lock();
+        try {
+            this.team = team;
+        } finally {
+            teamLock.unlock();
+        }
     }
 
     @Override

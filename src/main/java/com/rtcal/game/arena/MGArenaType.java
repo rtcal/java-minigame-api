@@ -2,8 +2,9 @@ package com.rtcal.game.arena;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -11,7 +12,7 @@ public final class MGArenaType {
 
     private static volatile MGArenaType instance;
 
-    private final Set<String> types = new HashSet<>();
+    private final Set<String> types = ConcurrentHashMap.newKeySet();
     private final Lock lock = new ReentrantLock();
 
     private MGArenaType() {
@@ -31,39 +32,20 @@ public final class MGArenaType {
     }
 
     public void register(@NotNull String type) {
-        lock.lock();
-        try {
-            types.add(type);
-        } finally {
-            lock.unlock();
-        }
+        types.add(type);
     }
 
     public void unregister(@NotNull String type) {
-        lock.lock();
-        try {
-            types.remove(type);
-        } finally {
-            lock.unlock();
-        }
+        types.remove(type);
     }
 
     public boolean isType(@NotNull String type) {
-        lock.lock();
-        try {
-            return types.contains(type);
-        } finally {
-            lock.unlock();
-        }
+        return types.contains(type);
     }
 
     public Set<String> getTypes() {
-        lock.lock();
-        try {
-            return new HashSet<>(types);
-        } finally {
-            lock.unlock();
-        }
+        return Collections.unmodifiableSet(types);
+
     }
 
 }

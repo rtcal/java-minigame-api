@@ -6,14 +6,14 @@ import com.rtcal.game.MGTeamManager;
 import com.rtcal.game.player.MGPlayer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class MGTeam {
 
-    private final Set<MGPlayer> players = new HashSet<>();
+    private final Set<MGPlayer> players = ConcurrentHashMap.newKeySet();
 
     private final UUID teamID;
     private final String name;

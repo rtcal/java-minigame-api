@@ -4,17 +4,14 @@ import com.rtcal.exceptions.MGDuplicateException;
 import com.rtcal.game.team.MGTeam;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class MGTeamManager {
 
     private static volatile MGTeamManager instance;
 
-    private final Map<String, MGTeam> teams = new HashMap<>();
-    private final Lock lock = new ReentrantLock();
+    private final Map<String, MGTeam> teams = new ConcurrentHashMap<>();
 
     private MGTeamManager() {
 
@@ -32,32 +29,21 @@ public final class MGTeamManager {
     }
 
     public boolean isRegisteredTeam(@NotNull String name) {
-        lock.lock();
-        try {
-            return teams.containsKey(name) && teams.get(name) != null;
-        } finally {
-            lock.unlock();
-        }
+        return teams.containsKey(name) && teams.get(name) != null;
     }
 
     public void registerTeam(@NotNull MGTeam team) throws MGDuplicateException {
-        lock.lock();
-        try {
-            if (isRegisteredTeam(team.getName())) throw new MGDuplicateException("MGTeam with name '" + team.getName() + "' already exists");
-            teams.put(team.getName(), team);
-        } finally {
-            lock.unlock();
-        }
+        if (isRegisteredTeam(team.getName())) throw new MGDuplicateException("MGTeam with name '" + team.getName() + "' already exists");
+        teams.put(team.getName(), team);
     }
 
     public void unregisterTeam(@NotNull String name) throws NullPointerException {
-        lock.lock();
-        try {
-            if (!isRegisteredTeam(name)) throw new NullPointerException("MGTeam '" + name + "' is not a registered team");
-            teams.remove(name);
-        } finally {
-            lock.unlock();
-        }
+        if (!isRegisteredTeam(name)) throw new NullPointerException("MGTeam '" + name + "' is not a registered team");
+        teams.remove(name);
+    }
+
+    public Map<String, MGTeam> getTeams() {
+        return teams;
     }
 
 }
