@@ -106,10 +106,8 @@ public final class MGLocation {
         MGLocation min = MGLocation.getMinimumLocation(loc1, loc2);
         MGLocation max = MGLocation.getMaximumLocation(loc1, loc2);
 
-        int x = max.getX() - min.getX();
-        int y = max.getY() - min.getY();
-        int z = max.getZ() - min.getZ();
-
-        return x >= 0 && x <= check.getX() && y >= 0 && y <= check.getY() && z >= 0 && z <= check.getZ();
+        return check.getX() >= min.getX() && check.getX() <= max.getX()
+                && check.getY() >= min.getY() && check.getY() <= max.getY()
+                && check.getZ() >= min.getZ() && check.getZ() <= max.getZ();
     }
 }

@@ -2,30 +2,20 @@ package com.rtcal.area;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
-
 public class MGArea {
+    private final MGLocation minLocation, maxLocation;
 
-    private final UUID uuid;
-    private final MGLocation size;
-
-    public MGArea(@NotNull MGLocation size) {
-        this(UUID.randomUUID(), size);
+    public MGArea(@NotNull MGLocation loc1, @NotNull MGLocation loc2) {
+        this.minLocation = MGLocation.getMinimumLocation(loc1, loc2);
+        this.maxLocation = MGLocation.getMaximumLocation(loc1, loc2);
     }
 
-    public MGArea(@NotNull UUID uuid, @NotNull MGLocation size) {
-        this.uuid = uuid;
-        this.size = MGLocation.abs(size);
+    public MGLocation getMinLocation() {
+        return minLocation;
     }
 
-    @NotNull
-    public final UUID getID() {
-        return uuid;
-    }
-
-    @NotNull
-    public final MGLocation getSize() {
-        return size;
+    public MGLocation getMaxLocation() {
+        return maxLocation;
     }
 
     public MGAreaSettings getSettings() {
@@ -36,6 +26,10 @@ public class MGArea {
         return false;
     }
 
+    public MGArea cloneMGAreaWithOffset(MGLocation offset) {
+        return new MGArea(getMinLocation().add(offset), getMaxLocation().add(offset));
+    }
+
     /**
      * Check whether a location is inside an area
      *
@@ -43,21 +37,19 @@ public class MGArea {
      * @return whether the location is within the area
      */
     public boolean isInside(MGLocation location) {
-        return MGLocation.isInside(MGLocation.ZERO, size, location);
+        return MGLocation.isInside(getMinLocation(), getMaxLocation(), location);
     }
 
     @Override
     public String toString() {
-        return "MGArea{uuid=" + getID() +
-                ",size=" + getSize() +
-                "}";
+        return "MGArea{min=" + getMinLocation() + ",max=" + getMaxLocation() + "}";
     }
 
     @Override
     public int hashCode() {
         int hash = 17;
-        hash = 31 * hash + getSize().hashCode();
-        hash = 31 * hash + getID().hashCode();
+        hash = 31 * hash + getMinLocation().hashCode();
+        hash = 31 * hash + getMaxLocation().hashCode();
         return hash;
     }
 

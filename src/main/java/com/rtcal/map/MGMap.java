@@ -1,20 +1,16 @@
 package com.rtcal.map;
 
 import com.rtcal.area.MGArea;
-import com.rtcal.area.MGLocation;
 import org.jetbrains.annotations.NotNull;
 
 public class MGMap {
 
     private final String name;
     private final MGArea area;
-    private final MGLocation minLocation, maxLocation;
 
-    public MGMap(@NotNull final String name, @NotNull final MGArea area, @NotNull final MGLocation offset) {
+    public MGMap(@NotNull final String name, @NotNull final MGArea area) {
         this.name = name;
         this.area = area;
-        this.minLocation = offset;
-        this.maxLocation = area.getSize().add(offset);
     }
 
     public final String getName() {
@@ -25,16 +21,15 @@ public class MGMap {
         return area;
     }
 
-    public final MGLocation getMinLocation() {
-        return minLocation;
+    @Override
+    public String toString() {
+        return "MGMap{name=" + getName() + "area=" + getArea() + "}";
     }
 
-    public final MGLocation getMaxLocation() {
-        return maxLocation;
+    @Override
+    public int hashCode() {
+        int hash = 17;
+        hash = 31 * hash + getName().hashCode();
+        return hash;
     }
-
-    public final boolean isInside(MGLocation location) {
-        return MGLocation.isInside(getMinLocation(), getMaxLocation(), location);
-    }
-
 }

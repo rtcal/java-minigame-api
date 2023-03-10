@@ -10,7 +10,7 @@ public class MGAreaTest {
 
     @Test
     public void testIsInside() {
-        MGArea area = new MGArea(new MGLocation(20, 20, 20));
+        MGArea area = new MGArea(MGLocation.ZERO, new MGLocation(20, 20, 20));
 
         assertTrue(area.isInside(new MGLocation(0, 0, 0)));
         assertTrue(area.isInside(new MGLocation(20, 20, 20)));
