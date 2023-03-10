@@ -28,4 +28,9 @@ public abstract class MGSettingsFlag<T> {
         this.value = value;
     }
 
+    @Override
+    public String toString() {
+        return "MGSettingsFlag{name=" + getName() + "value=" + getValue() + "}";
+    }
+
 }

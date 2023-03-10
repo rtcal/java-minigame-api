@@ -30,4 +30,11 @@ public class MGAreaSettings {
         flags.put(flag.getName(), flag);
     }
 
+    @Override
+    public String toString() {
+        return "MGAreaSettingsFlag{flags=[" +
+                String.join(",", flags.values().stream().map(MGSettingsFlag::toString).toList())
+                + "]}";
+    }
+
 }
