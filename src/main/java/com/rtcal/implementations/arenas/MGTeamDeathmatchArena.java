@@ -3,7 +3,7 @@ package com.rtcal.implementations.arenas;
 import com.rtcal.exceptions.MGDuplicateException;
 import com.rtcal.game.area.MGLocation;
 import com.rtcal.game.arena.MGArena;
-import com.rtcal.game.map.MGMap;
+import com.rtcal.game.area.map.MGMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

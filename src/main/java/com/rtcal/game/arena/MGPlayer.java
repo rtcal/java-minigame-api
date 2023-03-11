@@ -1,6 +1,5 @@
-package com.rtcal.game.player;
+package com.rtcal.game.arena;
 
-import com.rtcal.game.team.MGTeam;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

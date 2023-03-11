@@ -6,7 +6,7 @@ import com.rtcal.game.area.MGAreaSettings;
 import com.rtcal.game.area.MGLocation;
 import com.rtcal.game.area.MGProtectedArea;
 import com.rtcal.game.area.settings.MGSettingsFlagBoolean;
-import com.rtcal.game.map.MGMap;
+import com.rtcal.game.area.map.MGMap;
 import com.rtcal.implementations.arenas.MGTeamDeathmatchArena;
 
 public class Main {

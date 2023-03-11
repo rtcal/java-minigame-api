@@ -1,8 +1,7 @@
-package com.rtcal.game.team;
+package com.rtcal.game.arena;
 
 import com.rtcal.exceptions.MGDuplicateException;
 import com.rtcal.exceptions.MGPlayerBusyException;
-import com.rtcal.game.player.MGPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;

@@ -1,4 +1,4 @@
-package com.rtcal.game.map;
+package com.rtcal.game.area.map;
 
 import com.rtcal.game.area.MGArea;
 import com.rtcal.game.area.MGLocation;

@@ -4,7 +4,7 @@ import com.rtcal.exceptions.MGDuplicateException;
 import com.rtcal.game.MGArenaManager;
 import com.rtcal.game.MGGameModeManager;
 import com.rtcal.game.area.MGLocation;
-import com.rtcal.game.map.MGMap;
+import com.rtcal.game.area.map.MGMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +15,9 @@ import java.util.UUID;
  * MGArena name is created by MGMap.getName()_Type e.g. office_ffa (office is the map, ffa is the game mode type)
  */
 public abstract class MGArena {
+
+
+
     private final UUID arenaID;
     private final String type;
     private final String name;
