@@ -1,8 +1,10 @@
 package com.rtcal.game;
 
 import com.rtcal.exceptions.MGDuplicateException;
+import com.rtcal.game.area.MGLocation;
 import com.rtcal.game.arena.MGArena;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -108,6 +110,12 @@ public final class MGArenaManager {
         }
 
         return Collections.unmodifiableCollection(arenas);
+    }
+
+    @Nullable
+    public MGArena createNewInstanceOfArena(@NotNull String name, @Nullable MGLocation mapOffset) {
+        if (!isRegisteredArena(name)) return null;
+        return getRegisteredArenaByName(name).cloneArena(mapOffset);
     }
 
 }

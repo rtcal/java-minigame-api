@@ -64,7 +64,7 @@ public class MGTeam {
 
     @Override
     public String toString() {
-        return "MGTeam{name=" + getName() +
+        return getClass().getSimpleName() + "{name=" + getName() +
                 ",players=[" + String.join(",", players.stream().map(MGPlayer::toString).toList()) + "]"
                 + "}";
     }

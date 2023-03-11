@@ -32,7 +32,7 @@ public abstract class MGSettingsFlag<T> {
 
     @Override
     public String toString() {
-        return "MGSettingsFlag{name=" + getName() + "value=" + getValue() + "}";
+        return getClass().getSimpleName() + "{name=" + getName() + "value=" + getValue() + "}";
     }
 
 }

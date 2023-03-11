@@ -32,7 +32,7 @@ public class MGAreaSettings {
 
     @Override
     public String toString() {
-        return "MGAreaSettingsFlag{flags=[" +
+        return getClass().getSimpleName() + "{flags=[" +
                 String.join(",", flags.values().stream().map(MGSettingsFlag::toString).toList())
                 + "]}";
     }

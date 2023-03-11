@@ -14,7 +14,7 @@ import java.util.UUID;
  * MGArena creates an arena for a game mode type on an MGMap
  * MGArena name is created by MGMap.getName()_Type e.g. office_ffa (office is the map, ffa is the game mode type)
  */
-public class MGArena {
+public abstract class MGArena {
     private final UUID arenaID;
     private final String type;
     private final String name;
@@ -29,7 +29,7 @@ public class MGArena {
      */
     public MGArena(@NotNull String type, @NotNull MGMap map) throws MGDuplicateException {
         this.type = type;
-        this.name = map.getName() + "_" + type;
+        this.name = type + "_" + map.getName();
         this.map = map;
         this.arenaID = UUID.randomUUID();
 
@@ -46,9 +46,11 @@ public class MGArena {
     public MGArena(@NotNull MGArena original, @Nullable MGLocation mapOffset) {
         this.type = original.getType();
         this.name = original.getName();
-        this.map = new MGMap(original.getMap(), mapOffset);
+        this.map = original.getMap().cloneMGMapWithOffset(mapOffset);
         this.arenaID = UUID.randomUUID();
     }
+
+    public abstract MGArena cloneArena(@Nullable MGLocation mapOffset);
 
     public UUID getArenaID() {
         return arenaID;
@@ -64,6 +66,11 @@ public class MGArena {
 
     public MGMap getMap() {
         return map;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{uuid=" + getArenaID() + ",name=" + getName() + ",type=" + getType() + ",map=" + getMap() + "}";
     }
 
 }

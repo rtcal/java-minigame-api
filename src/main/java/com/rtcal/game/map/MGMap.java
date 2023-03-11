@@ -18,16 +18,6 @@ public class MGMap {
         this.area = area;
     }
 
-    public MGMap(@NotNull MGMap original, @Nullable MGLocation mapOffset) {
-        this.name = original.getName();
-
-        if (mapOffset == null) {
-            this.area = original.area;
-        } else {
-            this.area = original.area.cloneMGAreaWithOffset(mapOffset);
-        }
-    }
-
     public final String getName() {
         return name;
     }
@@ -36,9 +26,13 @@ public class MGMap {
         return area;
     }
 
+    public MGMap cloneMGMapWithOffset(@Nullable MGLocation mapOffset) {
+        return new MGMap(getName(), getArea().cloneMGAreaWithOffset(mapOffset));
+    }
+
     @Override
     public String toString() {
-        return "MGMap{name=" + getName() + "area=" + getArea() + "}";
+        return getClass().getSimpleName() + "{name=" + getName() + ",area=" + getArea() + "}";
     }
 
     @Override

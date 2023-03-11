@@ -1,6 +1,7 @@
 package com.rtcal.game.area;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class MGArea {
     private final MGLocation minLocation, maxLocation;
@@ -18,7 +19,7 @@ public class MGArea {
         return maxLocation;
     }
 
-    public MGArea cloneMGAreaWithOffset(@NotNull MGLocation offset) {
+    public MGArea cloneMGAreaWithOffset(@Nullable MGLocation offset) {
         return new MGArea(getMinLocation().add(offset), getMaxLocation().add(offset));
     }
 
@@ -34,7 +35,7 @@ public class MGArea {
 
     @Override
     public String toString() {
-        return "MGArea{min=" + getMinLocation() + ",max=" + getMaxLocation() + "}";
+        return getClass().getSimpleName() + "{min=" + getMinLocation() + ",max=" + getMaxLocation() + "}";
     }
 
     @Override

@@ -43,7 +43,7 @@ public final class MGLocation {
 
     @Override
     public String toString() {
-        return "MGLocation{x=" + x + ",y=" + y + ",z=" + z + "}";
+        return getClass().getSimpleName() + "{x=" + x + ",y=" + y + ",z=" + z + "}";
     }
 
     @Override

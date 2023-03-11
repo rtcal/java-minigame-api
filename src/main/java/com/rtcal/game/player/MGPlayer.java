@@ -75,7 +75,7 @@ public class MGPlayer {
 
     @Override
     public String toString() {
-        return "MGPlayer{uuid=" + getPlayerID() + ",name=" + getName() + "}";
+        return getClass().getSimpleName() + "{uuid=" + getPlayerID() + ",name=" + getName() + "}";
     }
 
     @Override
