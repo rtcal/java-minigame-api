@@ -29,15 +29,15 @@ public final class MGGameModeManager {
     }
 
     public void register(@NotNull String type) {
-        gameModes.add(type);
+        gameModes.add(type.toLowerCase());
     }
 
     public void unregister(@NotNull String type) {
-        gameModes.remove(type);
+        gameModes.remove(type.toLowerCase());
     }
 
     public boolean isType(@NotNull String type) {
-        return gameModes.contains(type);
+        return gameModes.contains(type.toLowerCase());
     }
 
     public Set<String> getGameModes() {

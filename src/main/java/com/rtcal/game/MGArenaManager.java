@@ -4,8 +4,7 @@ import com.rtcal.exceptions.MGDuplicateException;
 import com.rtcal.game.arena.MGArena;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -37,36 +36,78 @@ public final class MGArenaManager {
         return instance;
     }
 
+    @NotNull
+    public MGArena getRegisteredArenaByName(@NotNull String name) {
+        name = name.toLowerCase();
+        if (!isRegisteredArena(name)) throw new NullPointerException("MGArena '" + name + "' is not a registered arena");
+        return registeredArenas.get(name);
+    }
+
     public boolean isRegisteredArena(@NotNull String name) {
+        name = name.toLowerCase();
         return registeredArenas.containsKey(name) && registeredArenas.get(name) != null;
     }
 
     public void registerArena(@NotNull MGArena arena) throws MGDuplicateException {
-        if (isRegisteredArena(arena.getName())) throw new MGDuplicateException("MGArena with name '" + arena.getName() + "' already exists");
-        registeredArenas.put(arena.getName(), arena);
-        registeredArenasByTypeMapping.computeIfAbsent(arena.getType(), k -> ConcurrentHashMap.newKeySet()).add(arena.getName());
-        registeredArenasByMapNameMapping.computeIfAbsent(arena.getMap().getName(), k -> ConcurrentHashMap.newKeySet()).add(arena.getName());
+        String name = arena.getName().toLowerCase();
+        if (isRegisteredArena(name)) throw new MGDuplicateException("MGArena with name '" + name + "' already exists");
+        registeredArenas.put(name, arena);
+        registeredArenasByTypeMapping.computeIfAbsent(arena.getType(), k -> ConcurrentHashMap.newKeySet()).add(name);
+        registeredArenasByMapNameMapping.computeIfAbsent(arena.getMap().getName(), k -> ConcurrentHashMap.newKeySet()).add(name);
     }
 
     // TODO: Ensure arena instance isn't running
-    public void unregisterArena(@NotNull String name) throws NullPointerException {
-        if (!isRegisteredArena(name)) throw new NullPointerException("MGArena '" + name + "' is not a registered arena");
+    public void unregisterArena(@NotNull String name) {
+        final String lowerCaseName = name.toLowerCase();
 
         registeredArenasByTypeMapping.computeIfPresent(registeredArenas.get(name).getType(), (type, arenasOfType) -> {
-            arenasOfType.remove(name);
+            arenasOfType.remove(lowerCaseName);
             return arenasOfType;
         });
 
         registeredArenasByMapNameMapping.computeIfPresent(registeredArenas.get(name).getMap().getName(), (map, arenasOfType) -> {
-            arenasOfType.remove(name);
+            arenasOfType.remove(lowerCaseName);
             return arenasOfType;
         });
 
-        registeredArenas.remove(name);
+        registeredArenas.remove(lowerCaseName);
     }
 
     public Map<String, MGArena> getRegisteredArenas() {
-        return registeredArenas;
+        return Collections.unmodifiableMap(registeredArenas);
+    }
+
+    public Collection<MGArena> getRegisteredArenasByType(@NotNull String type) {
+        type = type.toLowerCase();
+        if (!MGGameModeManager.getInstance().isType(type)) throw new NullPointerException("MGAreaType '" + type + "' does not exist");
+
+        List<MGArena> arenas = new ArrayList<>();
+
+        for (String name : registeredArenasByTypeMapping.get(type)) {
+            try {
+                arenas.add(getRegisteredArenaByName(name));
+            } catch (NullPointerException e) {
+                unregisterArena(name); // The arena hasn't been registered correctly, unregister it completely to avoid issues
+            }
+        }
+
+        return Collections.unmodifiableCollection(arenas);
+    }
+
+    public Collection<MGArena> getRegisteredArenasByMapName(@NotNull String map) {
+        map = map.toLowerCase();
+
+        List<MGArena> arenas = new ArrayList<>();
+
+        for (String name : registeredArenasByMapNameMapping.get(map)) {
+            try {
+                arenas.add(getRegisteredArenaByName(name));
+            } catch (NullPointerException e) {
+                unregisterArena(name); // The arena hasn't been registered correctly, unregister it completely to avoid issues
+            }
+        }
+
+        return Collections.unmodifiableCollection(arenas);
     }
 
 }
