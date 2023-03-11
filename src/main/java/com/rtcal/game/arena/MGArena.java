@@ -8,7 +8,11 @@ import com.rtcal.game.area.map.MGMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * MGArena creates an arena for a game mode type on an MGMap
@@ -16,7 +20,7 @@ import java.util.UUID;
  */
 public abstract class MGArena {
 
-
+    private final Map<String, MGTeam> registeredTeams = new ConcurrentHashMap<>();
 
     private final UUID arenaID;
     private final String type;
@@ -69,6 +73,26 @@ public abstract class MGArena {
 
     public MGMap getMap() {
         return map;
+    }
+
+    public boolean isRegisteredTeam(@NotNull String name) {
+        name = name.toLowerCase();
+        return registeredTeams.containsKey(name) && registeredTeams.get(name) != null;
+    }
+
+    public void registerTeam(@NotNull MGTeam team) throws MGDuplicateException {
+        String name = team.getName().toLowerCase();
+        if (isRegisteredTeam(name)) throw new MGDuplicateException("MGTeam with name '" + name + "' is already a member of MGArena '" + getName() + "'");
+        registeredTeams.put(name, team);
+    }
+
+    public void unregisterTeam(@NotNull String name) {
+        final String lowerCaseName = name.toLowerCase();
+        registeredTeams.remove(lowerCaseName);
+    }
+
+    public Set<String> getTeamNames() {
+        return Collections.unmodifiableSet(registeredTeams.keySet());
     }
 
     @Override

@@ -23,15 +23,15 @@ public class MGTeam {
         this.teamID = UUID.randomUUID();
     }
 
-    public UUID getTeamID() {
+    public final UUID getTeamID() {
         return teamID;
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
-    public int getCapacity() {
+    public final int getCapacity() {
         return capacity;
     }
 
