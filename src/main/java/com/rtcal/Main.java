@@ -1,6 +1,5 @@
 package com.rtcal;
 
-import com.rtcal.exceptions.MGDuplicateException;
 import com.rtcal.game.MGArenaManager;
 import com.rtcal.game.area.MGAreaSettings;
 import com.rtcal.game.area.MGLocation;
@@ -28,27 +27,22 @@ public class Main {
                 )
         );
 
-        try {
-            // Create a base instance of an arena which will register it
-            // NGTeamDeathmatchArena has a type of "tdm" and the map name is "example_map" therefore the arena name is "tdm_example_map"
-            MGTeamDeathmatchArena teamDeathmatchArena = new MGTeamDeathmatchArena(exampleMap);
+        // Create a base instance of an arena which will register it
+        // NGTeamDeathmatchArena has a type of "tdm" and the map name is "example_map" therefore the arena name is "tdm_example_map"
+        MGTeamDeathmatchArena teamDeathmatchArena = new MGTeamDeathmatchArena(exampleMap);
 
-            System.out.println("Initial Instance: " + teamDeathmatchArena);
+        System.out.println("Initial Instance: " + teamDeathmatchArena);
 
-            for (int i = 0; i < 5; i++) {
-                //Generate an offset from the initial map
-                MGLocation offset = new MGLocation(i * 50, i, i * 100);
+        for (int i = 0; i < 5; i++) {
+            //Generate an offset from the initial map
+            MGLocation offset = new MGLocation(i * 50, i, i * 100);
 
-                // Create a new instance of the teamDeathmatchArena with an offset
-                MGTeamDeathmatchArena instance = (MGTeamDeathmatchArena) MGArenaManager.getInstance().createNewInstanceOfArena("tdm_example_map", offset);
+            // Create a new instance of the teamDeathmatchArena with an offset
+            MGTeamDeathmatchArena instance = (MGTeamDeathmatchArena) MGArenaManager.getInstance().createNewInstanceOfArena("tdm_example_map", offset);
 
-                assert instance != null;
-                System.out.println("Instance[" + i + "]: " + instance);
-            }
-
-        } catch (MGDuplicateException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
+            assert instance != null;
+            System.out.println("Instance[" + i + "]: " + instance);
         }
+
     }
 }

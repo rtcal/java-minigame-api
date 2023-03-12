@@ -1,6 +1,5 @@
 package com.rtcal.game;
 
-import com.rtcal.exceptions.MGDuplicateException;
 import com.rtcal.game.area.MGLocation;
 import com.rtcal.game.arena.MGArena;
 import org.jetbrains.annotations.NotNull;
@@ -40,9 +39,7 @@ public final class MGArenaManager {
 
     @NotNull
     public MGArena getRegisteredArenaByName(@NotNull String name) {
-        name = name.toLowerCase();
-        if (!isRegisteredArena(name)) throw new NullPointerException("MGArena '" + name + "' is not a registered arena");
-        return registeredArenas.get(name);
+        return registeredArenas.get(name.toLowerCase());
     }
 
     public boolean isRegisteredArena(@NotNull String name) {
@@ -50,15 +47,13 @@ public final class MGArenaManager {
         return registeredArenas.containsKey(name) && registeredArenas.get(name) != null;
     }
 
-    public void registerArena(@NotNull MGArena arena) throws MGDuplicateException {
+    public void registerArena(@NotNull MGArena arena) {
         String name = arena.getName().toLowerCase();
-        if (isRegisteredArena(name)) throw new MGDuplicateException("MGArena with name '" + name + "' already exists");
         registeredArenas.put(name, arena);
         registeredArenasByTypeMapping.computeIfAbsent(arena.getType(), k -> ConcurrentHashMap.newKeySet()).add(name);
         registeredArenasByMapNameMapping.computeIfAbsent(arena.getMap().getName(), k -> ConcurrentHashMap.newKeySet()).add(name);
     }
 
-    // TODO: Ensure arena instance isn't running
     public void unregisterArena(@NotNull String name) {
         final String lowerCaseName = name.toLowerCase();
 
@@ -81,7 +76,9 @@ public final class MGArenaManager {
 
     public Collection<MGArena> getRegisteredArenasByType(@NotNull String type) {
         type = type.toLowerCase();
-        if (!MGGameModeManager.getInstance().isType(type)) throw new NullPointerException("MGAreaType '" + type + "' does not exist");
+        if (!MGGameModeManager.getInstance().isType(type)) {
+            return new ArrayList<>();
+        }
 
         List<MGArena> arenas = new ArrayList<>();
 

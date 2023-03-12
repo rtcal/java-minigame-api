@@ -5,6 +5,7 @@ import com.rtcal.game.MGArenaManager;
 import com.rtcal.game.MGGameModeManager;
 import com.rtcal.game.area.MGLocation;
 import com.rtcal.game.area.map.MGMap;
+import com.rtcal.game.enums.MGTeamResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,9 +33,8 @@ public abstract class MGArena {
      *
      * @param type the game mode type e.g. ffa, tdm, conquest, capture the flag...
      * @param map  the map to be used for this arena
-     * @throws MGDuplicateException If a unique instance of a map_type exists i.e. cannot create two office_ffa instances
      */
-    public MGArena(@NotNull String type, @NotNull MGMap map) throws MGDuplicateException {
+    public MGArena(@NotNull String type, @NotNull MGMap map) {
         this.type = type;
         this.name = type + "_" + map.getName();
         this.map = map;
@@ -80,15 +80,22 @@ public abstract class MGArena {
         return registeredTeams.containsKey(name) && registeredTeams.get(name) != null;
     }
 
-    public void registerTeam(@NotNull MGTeam team) throws MGDuplicateException {
-        String name = team.getName().toLowerCase();
-        if (isRegisteredTeam(name)) throw new MGDuplicateException("MGTeam with name '" + name + "' is already a member of MGArena '" + getName() + "'");
+    public MGTeamResponse registerTeam(@NotNull MGTeam team) throws MGDuplicateException {
+        final String name = team.getName().toLowerCase();
+
+        if (isRegisteredTeam(name)) return MGTeamResponse.TEAM_DUPLICATE;
+
         registeredTeams.put(name, team);
+        return MGTeamResponse.SUCCESS;
     }
 
-    public void unregisterTeam(@NotNull String name) {
+    public MGTeamResponse unregisterTeam(@NotNull String name) {
         final String lowerCaseName = name.toLowerCase();
+
+        if (!isRegisteredTeam(lowerCaseName)) return MGTeamResponse.TEAM_NOT_FOUND;
+
         registeredTeams.remove(lowerCaseName);
+        return MGTeamResponse.SUCCESS;
     }
 
     public Set<String> getTeamNames() {

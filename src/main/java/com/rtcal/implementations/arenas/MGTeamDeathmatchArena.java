@@ -1,15 +1,14 @@
 package com.rtcal.implementations.arenas;
 
-import com.rtcal.exceptions.MGDuplicateException;
 import com.rtcal.game.area.MGLocation;
-import com.rtcal.game.arena.MGArena;
 import com.rtcal.game.area.map.MGMap;
+import com.rtcal.game.arena.MGArena;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class MGTeamDeathmatchArena extends MGArena {
 
-    public MGTeamDeathmatchArena(@NotNull MGMap map) throws MGDuplicateException {
+    public MGTeamDeathmatchArena(@NotNull MGMap map) {
         super("tdm", map);
     }
 

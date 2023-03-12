@@ -1,7 +1,6 @@
 package com.rtcal.game.arena;
 
-import com.rtcal.exceptions.MGDuplicateException;
-import com.rtcal.exceptions.MGPlayerBusyException;
+import com.rtcal.game.enums.MGPlayerResponse;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -44,17 +43,23 @@ public class MGTeam {
     }
 
     // TODO: get the arena the team is a member of and and register that the player is in that arena
-    public void addPlayer(@NotNull MGPlayer player) throws MGDuplicateException, MGPlayerBusyException {
-        if (containsPlayer(player)) throw new MGDuplicateException("MGPlayer '" + player.getName() + "' already part of MGTeam '" + getName() + "'");
-        if (player.hasTeam()) throw new MGPlayerBusyException("MGPlayer '" + player.getName() + "' already has a team");
+    public MGPlayerResponse addPlayer(@NotNull MGPlayer player) {
+        if (containsPlayer(player)) return MGPlayerResponse.PLAYER_DUPLICATE;
+        if (player.hasTeam()) return MGPlayerResponse.PLAYER_HAS_TEAM;
+
         players.add(player);
         player.setTeam(this);
+
+        return MGPlayerResponse.SUCCESS;
     }
 
-    public void removePlayer(@NotNull MGPlayer player) throws NullPointerException {
-        if (!containsPlayer(player)) throw new NullPointerException("MGPlayer '" + player.getName() + "' is not part of MGTeam '" + getName() + "'");
+    public MGPlayerResponse removePlayer(@NotNull MGPlayer player) {
+        if (!containsPlayer(player)) return MGPlayerResponse.PLAYER_NOT_FOUND;
+
         players.remove(player);
         player.setTeam(null);
+
+        return MGPlayerResponse.SUCCESS;
     }
 
     public Set<MGPlayer> getPlayers() {
