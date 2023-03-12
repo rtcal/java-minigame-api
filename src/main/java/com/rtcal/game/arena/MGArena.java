@@ -1,8 +1,5 @@
 package com.rtcal.game.arena;
 
-import com.rtcal.exceptions.MGDuplicateException;
-import com.rtcal.game.MGArenaManager;
-import com.rtcal.game.MGGameModeManager;
 import com.rtcal.game.area.MGLocation;
 import com.rtcal.game.area.map.MGMap;
 import com.rtcal.game.enums.MGTeamResponse;
@@ -39,9 +36,6 @@ public abstract class MGArena {
         this.name = type + "_" + map.getName();
         this.map = map;
         this.arenaID = UUID.randomUUID();
-
-        MGGameModeManager.getInstance().register(this.type);
-        MGArenaManager.getInstance().registerArena(this);
     }
 
     /**
@@ -80,7 +74,7 @@ public abstract class MGArena {
         return registeredTeams.containsKey(name) && registeredTeams.get(name) != null;
     }
 
-    public MGTeamResponse registerTeam(@NotNull MGTeam team) throws MGDuplicateException {
+    public MGTeamResponse registerTeam(@NotNull MGTeam team) {
         final String name = team.getName().toLowerCase();
 
         if (isRegisteredTeam(name)) return MGTeamResponse.TEAM_DUPLICATE;

@@ -27,11 +27,9 @@ public class Main {
                 )
         );
 
-        // Create a base instance of an arena which will register it
+        // Create a base instance of an arena and register it
         // NGTeamDeathmatchArena has a type of "tdm" and the map name is "example_map" therefore the arena name is "tdm_example_map"
-        MGTeamDeathmatchArena teamDeathmatchArena = new MGTeamDeathmatchArena(exampleMap);
-
-        System.out.println("Initial Instance: " + teamDeathmatchArena);
+        MGArenaManager.getInstance().registerArena(new MGTeamDeathmatchArena(exampleMap));
 
         for (int i = 0; i < 5; i++) {
             //Generate an offset from the initial map
